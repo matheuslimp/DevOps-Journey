@@ -11,7 +11,7 @@ variable "vm_infra_count" {
 }
 
 variable "vm_template" {
-  default = "ubuntu"
+  default = "VM 100"
 }
 
 variable "vm_storage" {
