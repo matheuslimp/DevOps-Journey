@@ -22,6 +22,8 @@ resource "proxmox_vm_qemu" "vm1" {
   memory      = 2048
   disk {
     size = "10G"
+    type = "scsi"
+    storage = "local-lvm"
   }
   network {
     model  = "virtio"
