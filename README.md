@@ -5,9 +5,9 @@ Um roteiro de estudos em tecnologias voltadas para **DevOps** e automação.
 
 ## Legenda dos conteúdos
 
-- 🟣 **Fundamental** – Essencial para dominar o tema.
-- 🟢 **Opcional** – Complementar, útil para aprofundar.
-- 🟡 **Proativo** – Conteúdo extra para quem quer ir além.
+- 🟣 **Fundamental** – Essencial para dominar o tema.  
+- 🟢 **Opcional** – Complementar, útil para aprofundar.  
+- 🟡 **Proativo** – Conteúdo extra para quem quer ir além.  
 
 ---
 
@@ -45,7 +45,18 @@ Um roteiro de estudos em tecnologias voltadas para **DevOps** e automação.
 
 ---
 
-## 5 - Containers
+## 5 - Virtualizadores
+- 🟣 VMware ESXi / vSphere
+- 🟣 Proxmox VE
+- 🟣 KVM / QEMU
+- 🟢 VirtualBox
+- 🟢 Hyper-V
+- 🟡 Nutanix AHV
+- 🟡 XenServer / Citrix Hypervisor
+
+---
+
+## 6 - Containers
 - 🟣 Docker
 - 🟣 LXC
 
@@ -56,12 +67,12 @@ Um roteiro de estudos em tecnologias voltadas para **DevOps** e automação.
     - 🟣 Operadores
     - 🟣 Templates
     - 🟣 Security Context Constraints
-- **Containerd** (runtime de containers)
-- **CRI-O** (runtime usado em OpenShift/Kubernetes)
+- 🟣 Containerd (runtime de containers)
+- 🟣 CRI-O (runtime usado em OpenShift/Kubernetes)
 
 ---
 
-## 6 - Provisionamento e IaC
+## 7 - Provisionamento e IaC
 - 🟣 Kubespray (provisionamento de clusters Kubernetes com Ansible)
 - 🟣 RKE / RKE2 (Rancher Kubernetes Engine)
 - 🟣 Terraform (IaC, usado junto com Kubernetes)
@@ -71,7 +82,7 @@ Um roteiro de estudos em tecnologias voltadas para **DevOps** e automação.
 
 ---
 
-## 7 - Rede e Configuração
+## 8 - Rede e Configuração
 - 🟣 DNS
 - 🟣 HTTP/HTTPS
 - 🟣 SSL/TLS
@@ -87,43 +98,43 @@ Um roteiro de estudos em tecnologias voltadas para **DevOps** e automação.
 
 ---
 
-## 8 - Pipelines
+## 9 - Pipelines
 
 ### 🔹 Testes e Validações
-- Unit tests / Integration tests (rodar testes automáticos dentro do pipeline)
-- Linting (ESLint, Pylint, etc.)
-- DAST (Dynamic Application Security Testing – segurança em execução)
+- 🟣 Unit tests / Integration tests (rodar testes automáticos dentro do pipeline)
+- 🟣 Linting (ESLint, Pylint, etc.)
+- 🟢 DAST (Dynamic Application Security Testing – segurança em execução)
 
 ### 🔹 Segurança de Imagens e Dependências
-- Image Scanning (ex: Trivy, Clair, Anchore)
-- Dependency Scanning (checagem de vulnerabilidades em libs e pacotes)
-- Secret Detection (evitar credenciais expostas – GitLeaks, GitLab Secret scanning)
+- 🟣 Image Scanning (ex: Trivy, Clair, Anchore)
+- 🟣 Dependency Scanning (checagem de vulnerabilidades em libs e pacotes)
+- 🟢 Secret Detection (evitar credenciais expostas – GitLeaks, GitLab Secret scanning)
 
 ### 🔹 Build & Deploy
-- Build de Containers (Docker / Buildah / Kaniko)
-- Helm Charts (deploy padronizado em Kubernetes)
-- ArgoCD / FluxCD (GitOps)
-- Blue/Green e Canary Deployments
+- 🟣 Build de Containers (Docker / Buildah / Kaniko)
+- 🟣 Helm Charts (deploy padronizado em Kubernetes)
+- 🟣 ArgoCD / FluxCD (GitOps)
+- 🟢 Blue/Green e Canary Deployments
 
 ### 🔹 Infraestrutura
-- Terraform Pipelines (IaC automatizado)
-- Provisionamento dinâmico de ambientes para testes (Ephemeral Environments)
+- 🟣 Terraform Pipelines (IaC automatizado)
+- 🟢 Provisionamento dinâmico de ambientes para testes (Ephemeral Environments)
 
 ### 🔹 Observabilidade no Pipeline
-- Métricas e logs do pipeline
-- Notificações (Slack, Teams, e-mail)
+- 🟣 Métricas e logs do pipeline
+- 🟢 Notificações (Slack, Teams, e-mail)
 
 ---
 
-## 9 - Observabilidade
-- Prometheus + Grafana (monitoramento e visualização)
-- ELK / EFK (Elasticsearch, Fluentd, Kibana)
-- Jaeger (tracing distribuído)
+## 10 - Observabilidade
+- 🟣 Prometheus + Grafana (monitoramento e visualização)
+- 🟣 ELK / EFK (Elasticsearch, Fluentd, Kibana)
+- 🟢 Jaeger (tracing distribuído)
 
 ---
 
-## 10 - Rede e Segurança em Kubernetes
-- CNI Plugins (Calico, Flannel, Cilium)
-- Service Mesh (Istio, Linkerd)
-- RBAC (Role-Based Access Control)
-- Pod Security Standards (PSS) / Policies
+## 11 - Rede e Segurança em Kubernetes
+- 🟣 CNI Plugins (Calico, Flannel, Cilium)
+- 🟢 Service Mesh (Istio, Linkerd)
+- 🟣 RBAC (Role-Based Access Control)
+- 🟣 Pod Security Standards (PSS) / Policies
