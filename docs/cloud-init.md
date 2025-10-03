@@ -43,7 +43,7 @@ system_info:
     gecos: Ubuntu
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
-
+```
 # hostname será definido via Proxmox ou Terraform
 preserve_hostname: false
 
@@ -87,7 +87,7 @@ network:
       nameservers:
         addresses: [8.8.8.8, 8.8.4.4
 ]
-
+```
 ### Usando DHCP
 
 ```yaml
@@ -96,11 +96,13 @@ network:
   ethernets:
     eth0:
       dhcp4: true
+```
 ###Testando cloud-init na VM
 
-    Para testar se o cloud-init está funcionando:
-
+  Para testar se o cloud-init está funcionando:
+```yaml
     sudo cloud-init status
     sudo cloud-init clean    # limpa configurações antigas
     sudo cloud-init init     # aplica novas configurações
     sudo cloud-init status --long
+```
