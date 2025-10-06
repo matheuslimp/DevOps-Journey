@@ -8,8 +8,8 @@ terraform {
 }
 
 provider "proxmox" {
-  pm_api_url      = "https://10.0.0.10:8006/api2/json"
-  pm_api_token_id = "root@pam!root_api"
-  pm_api_token_secret = "baa8c164-9cc9-419d-91c9-320fdbb601e6"
+  pm_api_url      = "[URL DA API https://X.X.X.X:8006/api2/json]"
+  pm_api_token_id = "[NOME DO TOKEN (IDTOKEN)]"
+  pm_api_token_secret = "[API KEY]"
   pm_tls_insecure = true
 }
