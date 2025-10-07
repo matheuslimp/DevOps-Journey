@@ -91,19 +91,32 @@ minikube kubectl -- get po -A
 ```
 
 
-7. Expondo a Dashboard do MiniKube na rede local
+7. Expondo a Dashboard do MiniKube na rede local (Port-forward) Não indicado para ambiente produtivos
 
 ### Ative a dashboard:
 ```bash
 minikube dashboard --url
 ```
 
-
 Este comando exibirá a URL que você pode acessar de outro computador na mesma rede.
 
 A URL geralmente será algo como: http://<IP_DO_MINIKUBE>:<PORTA>
 
 ### Permita acesso externo (opcional, caso precise acessar fora da máquina host):
+
+Descubra o serviço:
+
+```bash
+kubectl -n kubernetes-dashboard get svc
+```
+
+### Faça o forward para uma porta pública:
+```bash
+kubectl -n kubernetes-dashboard port-forward service/kubernetes-dashboar
+```
+### Para testar basta acessa de outro maquina 
+    http://<IP DA MAQUINA>:8080/
+
 ```bash
 minikube service kubernetes-dashboard --url
 ```
