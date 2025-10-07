@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador RHCSA - Red Hat Certified System Administrator</title>
+    
+    <!-- CSS do Timer de Prova -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='exam_timer.css') }}">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            color: #ee0000;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .header .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ee0000;
+            margin-bottom: 20px;
+        }
+
+        .user-info strong {
+            color: #ee0000;
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ee0000;
+        }
+
+        .questions-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .question-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #ee0000;
+        }
+
+        .question-number {
+            background: #ee0000;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-verify {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-verify:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .btn-verify:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-container {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .result-container.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .result-container.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #28a745;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .control-panel {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .control-panel h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-finish {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-finish:hover {
+            background: #0056b3;
+        }
+
+        .btn-reset {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #c82333;
+        }
+
+        .btn-pdf {
+            background: #6f42c1;
+            color: white;
+        }
+
+        .btn-pdf:hover {
+            background: #5a32a3;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header, .main-content {
+                padding: 20px;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+
+            .control-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+        }
+
+        /* Red Hat inspired color scheme */
+        .redhat-accent {
+            color: #ee0000;
+        }
+
+        .progress-indicator {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #ee0000, #ff4444);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Timer de Prova RHCSA -->
+    <div class="exam-timer-container" id="examTimerContainer">
+        <div class="timer-layout">
+            <div class="timer-display" id="timer-display">02:30:00</div>
+            
+            <div class="timer-progress-container">
+                <div class="timer-progress progress-normal" id="timer-progress"></div>
+            </div>
+            
+            <div class="timer-status active" id="timer-status">⏱️ EM ANDAMENTO</div>
+            
+            <div class="timer-controls">
+                <button class="timer-btn btn-warning" id="timer-pause-btn" title="Pausar/Retomar cronômetro">
+                    ⏸️ Pausar
+                </button>
+                <button class="timer-btn btn-info" onclick="extendExamTimer(30)" title="Estender tempo em 30 minutos">
+                    ⏰ +30min
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Simulador RHCSA</h1>
+            <p class="subtitle">Red Hat Certified System Administrator - Ambiente de Prática</p>
+            
+            <div class="user-info">
+                <strong>👤 Usuário:</strong> {{ user }}
+            </div>
+
+            <div class="progress-indicator">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <p style="text-align: center; color: #666; margin-top: 10px;">
+                <span id="progressText">0 de {{ questions|length }} questões verificadas</span>
+            </p>
+        </div>
+
+        <div class="main-content">
+            <h2 class="section-title">📋 Questões do Exame</h2>
+            
+            <div class="questions-grid">
+                {% for question in questions %}
+                <div class="question-card" data-question-id="{{ question.id }}">
+                    <div class="question-number">{{ question.id }}</div>
+                    <div class="question-text">{{ question.text }}</div>
+                    
+                    <div class="question-actions">
+                        <button class="btn btn-verify" onclick="verifyQuestion({{ question.id }})" id="btn-{{ question.id }}">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                            </svg>
+                            Verificar
+                        </button>
+                    </div>
+                    
+                    <div class="result-container" id="result-{{ question.id }}"></div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="control-panel">
+                <h3>🔧 Controles do Simulador</h3>
+                <div class="control-buttons">
+                    <form action="{{ url_for('finish') }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-finish">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                            </svg>
+                            Finalizar Simulação
+                        </button>
+                    </form>
+                    
+                    <form action="{{ url_for('reset') }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-reset" onclick="return confirm('Tem certeza que deseja zerar o laboratório? Esta ação não pode ser desfeita.')">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                            </svg>
+                            Zerar Laboratório
+                        </button>
+                    </form>
+                    
+                    <form action="{{ url_for('generate_pdf_route') }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-pdf">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                            Gerar Relatório PDF
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let verifiedQuestions = 0;
+        const totalQuestions = {{ questions|length }};
+
+        function updateProgress() {
+            const percentage = (verifiedQuestions / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${verifiedQuestions} de ${totalQuestions} questões verificadas`;
+        }
+
+        function verifyQuestion(qid) {
+            console.log('Verificando questão ' + qid);
+            
+            const button = document.getElementById('btn-' + qid);
+            const resultDiv = document.getElementById('result-' + qid);
+            
+            // Mostrar loading
+            button.disabled = true;
+            button.innerHTML = '<div class="loading"></div> Verificando...';
+            
+            // Limpar resultado anterior
+            resultDiv.style.display = 'none';
+            resultDiv.className = 'result-container';
+            
+            fetch('/verify/' + qid, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Resposta recebida:', data);
+                
+                // Restaurar botão
+                button.disabled = false;
+                button.innerHTML = `
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    Verificar
+                `;
+                
+                // Mostrar resultado
+                resultDiv.innerHTML = data.result;
+                resultDiv.className = 'result-container ' + (data.success ? 'success' : 'error');
+                resultDiv.style.display = 'block';
+                
+                // Atualizar progresso se for a primeira verificação desta questão
+                const questionCard = document.querySelector(`[data-question-id="${qid}"]`);
+                if (!questionCard.dataset.verified) {
+                    questionCard.dataset.verified = 'true';
+                    verifiedQuestions++;
+                    updateProgress();
+                }
+                
+                // Scroll suave para o resultado
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            })
+            .catch(error => {
+                console.error('Erro ao verificar:', error);
+                
+                // Restaurar botão
+                button.disabled = false;
+                button.innerHTML = `
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    Verificar
+                `;
+                
+                // Mostrar erro
+                resultDiv.innerHTML = 'Erro ao verificar a questão. Tente novamente.';
+                resultDiv.className = 'result-container error';
+                resultDiv.style.display = 'block';
+            });
+        }
+
+        // Inicializar progresso
+        updateProgress();
+
+        // Adicionar efeitos de hover e animações
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.question-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+    
+    <!-- JavaScript do Timer de Prova -->
+    <script src="{{ url_for('static', filename='exam_timer.js') }}"></script>
+    
+    <!-- Indicador de Auto-Save -->
+    <div class="auto-save-indicator" id="autoSaveIndicator">
+        💾 Progresso salvo automaticamente
+    </div>
+    
+    <script>
+        // Auto-save listener
+        document.addEventListener('autoSave', function(event) {
+            const indicator = document.getElementById('autoSaveIndicator');
+            if (indicator) {
+                indicator.classList.add('show');
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 2000);
+            }
+        });
+        
+        // Integração com verificação de questões
+        function updateProgressAfterVerification() {
+            // Disparar evento de auto-save após verificação
+            document.dispatchEvent(new CustomEvent('autoSave'));
+        }
+    </script>
+</body>
+</html>
+

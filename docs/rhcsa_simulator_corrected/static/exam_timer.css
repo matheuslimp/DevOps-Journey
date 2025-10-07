@@ -1,0 +1,404 @@
+/**
+ * Simulador RHCSA - Estilos do Timer de Prova
+ * Estilos para cronômetro similar aos exames Red Hat
+ */
+
+/* Container principal do timer */
+.exam-timer-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    border-bottom: 3px solid #e74c3c;
+    font-family: 'Courier New', monospace;
+}
+
+/* Layout do timer */
+.timer-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Display principal do tempo */
+.timer-display {
+    font-size: 2.5em;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    min-width: 200px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+/* Estados do timer por cor */
+.timer-normal {
+    color: #2ecc71;
+    text-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+}
+
+.timer-caution {
+    color: #f39c12;
+    text-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+}
+
+.timer-warning {
+    color: #e67e22;
+    text-shadow: 0 0 10px rgba(230, 126, 34, 0.3);
+    animation: pulse-warning 2s infinite;
+}
+
+.timer-critical {
+    color: #e74c3c;
+    text-shadow: 0 0 15px rgba(231, 76, 60, 0.5);
+    animation: pulse-critical 1s infinite;
+}
+
+.timer-error {
+    color: #95a5a6;
+    text-shadow: none;
+}
+
+/* Animações de pulsação */
+@keyframes pulse-warning {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes pulse-critical {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+/* Barra de progresso */
+.timer-progress-container {
+    flex: 1;
+    margin: 0 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.timer-progress {
+    height: 100%;
+    transition: width 1s ease, background-color 0.3s ease;
+    border-radius: 10px;
+    position: relative;
+}
+
+.progress-normal {
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
+}
+
+.progress-caution {
+    background: linear-gradient(90deg, #f39c12, #e67e22);
+}
+
+.progress-warning {
+    background: linear-gradient(90deg, #e67e22, #d35400);
+}
+
+.progress-critical {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    animation: progress-flash 0.5s infinite alternate;
+}
+
+@keyframes progress-flash {
+    0% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+/* Indicador de status */
+.timer-status {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 20px;
+    text-align: center;
+    min-width: 150px;
+    transition: all 0.3s ease;
+}
+
+.timer-status.active {
+    background: rgba(46, 204, 113, 0.2);
+    border: 2px solid #2ecc71;
+    color: #2ecc71;
+}
+
+.timer-status.paused {
+    background: rgba(243, 156, 18, 0.2);
+    border: 2px solid #f39c12;
+    color: #f39c12;
+}
+
+.timer-status.expired {
+    background: rgba(231, 76, 60, 0.2);
+    border: 2px solid #e74c3c;
+    color: #e74c3c;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.5; }
+}
+
+/* Controles do timer */
+.timer-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.timer-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.timer-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.timer-btn.btn-warning {
+    background: #f39c12;
+    color: white;
+}
+
+.timer-btn.btn-warning:hover {
+    background: #e67e22;
+}
+
+.timer-btn.btn-success {
+    background: #2ecc71;
+    color: white;
+}
+
+.timer-btn.btn-success:hover {
+    background: #27ae60;
+}
+
+.timer-btn.btn-info {
+    background: #3498db;
+    color: white;
+}
+
+.timer-btn.btn-info:hover {
+    background: #2980b9;
+}
+
+/* Notificações do exame */
+.exam-notification {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    z-index: 1001;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    border-left: 5px solid #3498db;
+}
+
+.exam-notification.show {
+    transform: translateX(0);
+}
+
+.exam-notification.warning {
+    border-left-color: #f39c12;
+}
+
+.exam-notification.critical {
+    border-left-color: #e74c3c;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px 10px;
+    border-bottom: 1px solid #ecf0f1;
+    color: #2c3e50;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #95a5a6;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.notification-close:hover {
+    background: #ecf0f1;
+    color: #e74c3c;
+}
+
+.notification-body {
+    padding: 10px 20px 15px;
+    color: #34495e;
+    line-height: 1.4;
+}
+
+/* Ajustes para tela pequena */
+@media (max-width: 768px) {
+    .exam-timer-container {
+        padding: 8px 15px;
+    }
+    
+    .timer-layout {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .timer-display {
+        font-size: 2em;
+        min-width: auto;
+    }
+    
+    .timer-progress-container {
+        margin: 0;
+        width: 100%;
+    }
+    
+    .timer-controls {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .timer-btn {
+        font-size: 0.8em;
+        padding: 6px 12px;
+    }
+    
+    .exam-notification {
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .timer-display {
+        font-size: 1.5em;
+    }
+    
+    .timer-status {
+        font-size: 1em;
+        min-width: auto;
+        padding: 5px 10px;
+    }
+    
+    .notification-header,
+    .notification-body {
+        padding: 10px 15px;
+    }
+}
+
+/* Ajuste do conteúdo principal para não ficar atrás do timer */
+body {
+    padding-top: 80px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 120px;
+    }
+}
+
+/* Estilo para quando o timer está pausado */
+.exam-timer-container.paused {
+    background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+    border-bottom-color: #f39c12;
+}
+
+/* Estilo para quando o tempo expirou */
+.exam-timer-container.expired {
+    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+    border-bottom-color: #fff;
+    animation: timer-expired 1s infinite alternate;
+}
+
+@keyframes timer-expired {
+    0% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+/* Tooltip para controles */
+.timer-btn[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    z-index: 1002;
+}
+
+/* Indicador de auto-save */
+.auto-save-indicator {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(46, 204, 113, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.auto-save-indicator.show {
+    opacity: 1;
+}
+
+/* Efeitos de transição suaves */
+* {
+    box-sizing: border-box;
+}
+
+.exam-timer-container * {
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+

@@ -12,12 +12,11 @@ Um roteiro de estudos em tecnologias voltadas para **DevOps** e automação.
 ---
 
 ## 1 - Sistemas Operacionais / CLI
-- 🟣 Debian
-- 🟣 RHEL e derivados
-- 🟣 RockyLinux / CentOS
-- 🟢 Windows
+- 🟣 [ Debian ](./docs/Material%20de%20estudos/SO.md)
+- 🟣 [ RHEL e derivados ](./docs/Material%20de%20estudos/SO.md)
+- 🟣 [ RockyLinux / CentOS ](./docs/Material%20de%20estudos/SO.md)
+- 🟢 [ Windows Powershell ](./docs/Material%20de%20estudos/SO.md)
 
----
 
 ## 2 - Linguagens de Programação e Scripts
 - 🟣 Bash (Monitoramento de processos, desempenho, ferramentas de rede, manipulação de texto)

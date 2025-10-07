@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados - Simulador RHCSA</title>
+    
+    <!-- CSS do Timer de Prova -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='exam_timer.css') }}">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #ee0000;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .results-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .score-summary {
+            background: linear-gradient(135deg, #ee0000, #ff4444);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .score-summary h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .score-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .score-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .score-item .number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .score-item .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .questions-results {
+            margin-top: 30px;
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ee0000;
+        }
+
+        .question-result {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .question-result:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .question-number {
+            background: #ee0000;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .question-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-not-verified {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .question-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .question-feedback {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #6c757d;
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .question-feedback.success {
+            border-left-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .question-feedback.error {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .category-filter {
+            margin-bottom: 25px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #ee0000;
+            background: white;
+            color: #ee0000;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: #ee0000;
+            color: white;
+        }
+
+        .actions {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 10px;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+            transform: translateY(-1px);
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .performance-indicator {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .performance-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .performance-excellent {
+            background: #28a745;
+            color: white;
+        }
+
+        .performance-good {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .performance-needs-improvement {
+            background: #dc3545;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header, .results-container {
+                padding: 20px;
+            }
+
+            .score-details {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .filter-buttons {
+                justify-content: center;
+            }
+
+            .btn {
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Timer de Prova RHCSA - Finalizado -->
+    <div class="exam-timer-container expired" id="examTimerContainer">
+        <div class="timer-layout">
+            <div class="timer-display timer-critical">00:00:00</div>
+            
+            <div class="timer-progress-container">
+                <div class="timer-progress progress-critical" style="width: 0%"></div>
+            </div>
+            
+            <div class="timer-status expired">🏁 EXAME FINALIZADO</div>
+            
+            <div class="timer-controls">
+                <button class="timer-btn btn-info" onclick="window.location.href='/'" title="Novo exame">
+                    🔄 Novo Exame
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>📊 Resultados da Simulação</h1>
+            <p class="subtitle">Red Hat Certified System Administrator - Relatório de Desempenho</p>
+        </div>
+
+        <div class="results-container">
+            <div class="score-summary">
+                <h2>Pontuação Final</h2>
+                <div class="score-display">{{ overall_percentage }}%</div>
+                
+                <div class="score-details">
+                    <div class="score-item">
+                        <span class="number">{{ correct }}</span>
+                        <span class="label">Corretas</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="number">{{ total - correct }}</span>
+                        <span class="label">Incorretas</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="number">{{ total }}</span>
+                        <span class="label">Total</span>
+                    </div>
+                </div>
+
+                <div class="performance-indicator">
+                    {% if score >= 80 %}
+                        <div class="performance-badge performance-excellent">
+                            🎉 Excelente! Você está pronto para o exame!
+                        </div>
+                    {% elif score >= 60 %}
+                        <div class="performance-badge performance-good">
+                            👍 Bom desempenho! Continue praticando!
+                        </div>
+                    {% else %}
+                        <div class="performance-badge performance-needs-improvement">
+                            📚 Precisa melhorar. Estude mais e pratique!
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="questions-results">
+                <h2 class="section-title">📋 Detalhes por Questão</h2>
+                
+                <div class="category-filter">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterQuestions('all')">Todas</button>
+                        <button class="filter-btn" onclick="filterQuestions('correct')">Corretas</button>
+                        <button class="filter-btn" onclick="filterQuestions('incorrect')">Incorretas</button>
+                        <button class="filter-btn" onclick="filterQuestions('not-verified')">Não Verificadas</button>
+                    </div>
+                </div>
+
+                {% for question in questions %}
+                {% set qid_str = question.id|string %}
+                <div class="question-result" data-status="{{ 'correct' if results.get(qid_str) and results[qid_str]['success'] else ('incorrect' if qid_str in results else 'not-verified') }}">
+                    <div class="question-header">
+                        <div class="question-number">{{ question.id }}</div>
+                        {% if qid_str in results %}
+                            {% if results[qid_str].success %}
+                                <div class="question-status status-success">✅ Correto</div>
+                            {% else %}
+                                <div class="question-status status-error">❌ Incorreto</div>
+                            {% endif %}
+                        {% else %}
+                            <div class="question-status status-not-verified">⏸️ Não Verificado</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="question-text">{{ question.text }}</div>
+                    
+                    {% if results.get(qid_str) %}
+                        <div class="question-feedback {{ 'success' if results[qid_str].success else 'error' }}">
+                            <strong>Resultado:</strong> {{ results[qid_str].result }}
+                        </div>
+                    {% else %}
+                        <div class="question-feedback">
+                            Esta questão não foi verificada durante a simulação.
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="actions">
+                <h3 style="margin-bottom: 20px; color: #333;">O que fazer agora?</h3>
+                
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                    </svg>
+                    Nova Simulação
+                </a>
+                
+                <form action="{{ url_for('generate_pdf_route') }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-secondary">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        Baixar Relatório PDF
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterQuestions(filter) {
+            const questions = document.querySelectorAll('.question-result');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // Atualizar botões ativos
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filtrar questões
+            questions.forEach(question => {
+                const status = question.dataset.status;
+                let show = false;
+                
+                switch(filter) {
+                    case 'all':
+                        show = true;
+                        break;
+                    case 'correct':
+                        show = status === 'correct';
+                        break;
+                    case 'incorrect':
+                        show = status === 'incorrect';
+                        break;
+                    case 'not-verified':
+                        show = status === 'not-verified';
+                        break;
+                }
+                
+                question.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        // Adicionar animações de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.question-result');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
+

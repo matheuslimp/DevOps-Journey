@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset do Laboratório - Simulador RHCSA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .reset-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #ee0000;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .reset-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #ee0000, #ff4444);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 2s linear infinite;
+        }
+
+        .reset-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 30px 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .status-message.processing {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+        }
+
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .progress-container {
+            margin: 30px 0;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #ee0000, #ff4444);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 6px;
+        }
+
+        .progress-text {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .reset-details {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .reset-details h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .reset-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .reset-item:last-child {
+            border-bottom: none;
+        }
+
+        .reset-item .icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .reset-item .icon.pending {
+            fill: #6c757d;
+        }
+
+        .reset-item .icon.processing {
+            fill: #ffc107;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .reset-item .icon.completed {
+            fill: #28a745;
+        }
+
+        .reset-item .icon.error {
+            fill: #dc3545;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .reset-item .text {
+            flex: 1;
+            font-size: 1rem;
+        }
+
+        .reset-item .status {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .status.pending {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .status.processing {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .actions {
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 10px;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            margin-bottom: 10px;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .reset-container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .btn {
+                margin: 5px;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="reset-container">
+            <div class="header">
+                <h1>🔄 Reset do Laboratório</h1>
+                <p class="subtitle">Restaurando o ambiente para o estado inicial</p>
+            </div>
+
+            <div class="reset-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                </svg>
+            </div>
+
+            {% if status == 'processing' %}
+                <div class="status-message processing">
+                    🔄 Processando reset do laboratório... Por favor, aguarde.
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Iniciando processo de reset...</div>
+                </div>
+
+                <div class="reset-details">
+                    <h3>Operações de Reset</h3>
+                    <div id="resetOperations">
+                        <div class="reset-item" data-operation="users">
+                            <svg class="icon pending" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            <div class="text">Removendo usuários criados</div>
+                            <div class="status pending">Pendente</div>
+                        </div>
+                        <div class="reset-item" data-operation="network">
+                            <svg class="icon pending" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            <div class="text">Resetando configurações de rede</div>
+                            <div class="status pending">Pendente</div>
+                        </div>
+                        <div class="reset-item" data-operation="services">
+                            <svg class="icon pending" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            <div class="text">Parando serviços configurados</div>
+                            <div class="status pending">Pendente</div>
+                        </div>
+                        <div class="reset-item" data-operation="storage">
+                            <svg class="icon pending" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            <div class="text">Limpando configurações de armazenamento</div>
+                            <div class="status pending">Pendente</div>
+                        </div>
+                        <div class="reset-item" data-operation="firewall">
+                            <svg class="icon pending" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            <div class="text">Resetando firewall e SELinux</div>
+                            <div class="status pending">Pendente</div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    // Simular progresso do reset
+                    let progress = 0;
+                    const operations = ['users', 'network', 'services', 'storage', 'firewall'];
+                    let currentOperation = 0;
+
+                    function updateProgress() {
+                        progress += Math.random() * 15 + 5;
+                        if (progress > 100) progress = 100;
+
+                        document.getElementById('progressFill').style.width = progress + '%';
+                        
+                        if (currentOperation < operations.length) {
+                            const operation = operations[currentOperation];
+                            const item = document.querySelector(`[data-operation="${operation}"]`);
+                            
+                            if (progress > (currentOperation + 1) * 20) {
+                                // Marcar como concluído
+                                item.querySelector('.icon').classList.remove('pending', 'processing');
+                                item.querySelector('.icon').classList.add('completed');
+                                item.querySelector('.status').textContent = 'Concluído';
+                                item.querySelector('.status').classList.remove('pending', 'processing');
+                                item.querySelector('.status').classList.add('completed');
+                                currentOperation++;
+                            } else if (progress > currentOperation * 20) {
+                                // Marcar como processando
+                                item.querySelector('.icon').classList.remove('pending');
+                                item.querySelector('.icon').classList.add('processing');
+                                item.querySelector('.status').textContent = 'Processando...';
+                                item.querySelector('.status').classList.remove('pending');
+                                item.querySelector('.status').classList.add('processing');
+                                document.getElementById('progressText').textContent = `Processando: ${item.querySelector('.text').textContent}`;
+                            }
+                        }
+
+                        if (progress < 100) {
+                            setTimeout(updateProgress, 500 + Math.random() * 1000);
+                        } else {
+                            document.getElementById('progressText').textContent = 'Reset concluído com sucesso!';
+                            setTimeout(() => {
+                                window.location.href = "{{ url_for('index') }}";
+                            }, 2000);
+                        }
+                    }
+
+                    // Iniciar simulação
+                    setTimeout(updateProgress, 1000);
+                </script>
+
+            {% elif status == 'completed' %}
+                <div class="status-message">
+                    ✅ Reset do laboratório concluído com sucesso!
+                </div>
+
+                <div class="reset-details">
+                    <h3>Operações Realizadas</h3>
+                    {% for result in results %}
+                    <div class="reset-item">
+                        <svg class="icon completed" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                        <div class="text">{{ result }}</div>
+                        <div class="status completed">Concluído</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            {% elif status == 'error' %}
+                <div class="status-message error">
+                    ❌ Erro durante o reset do laboratório.
+                </div>
+
+                <div class="reset-details">
+                    <h3>Detalhes do Erro</h3>
+                    <div class="reset-item">
+                        <svg class="icon error" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        <div class="text">{{ error_message or 'Erro desconhecido durante o processo de reset.' }}</div>
+                        <div class="status error">Erro</div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ O que fazer agora?</h4>
+                    <p>Você pode tentar executar o reset novamente ou continuar com a simulação. Algumas configurações podem não ter sido revertidas completamente.</p>
+                </div>
+            {% endif %}
+
+            <div class="actions">
+                {% if status == 'completed' or status == 'error' %}
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                        Voltar ao Simulador
+                    </a>
+                    
+                    {% if status == 'error' %}
+                        <form action="{{ url_for('reset') }}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-secondary">
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                                    </svg>
+                                Tentar Novamente
+                            </button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <button class="btn btn-secondary" disabled>
+                        <div class="loading"></div>
+                        Processando...
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

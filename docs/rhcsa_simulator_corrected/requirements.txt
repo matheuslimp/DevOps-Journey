@@ -1,0 +1,23 @@
+# Dependências Python para o Simulador RHCSA - Versão Corrigida
+
+# Framework web principal
+Flask>=2.0.0
+
+# Geração de PDF
+WeasyPrint>=54.0
+
+# Dependências implícitas (podem ser necessárias em alguns sistemas)
+Jinja2>=3.0.0
+MarkupSafe>=2.0.0
+Werkzeug>=2.0.0
+click>=8.0.0
+itsdangerous>=2.0.0
+
+# Para WeasyPrint
+cffi>=1.15.0
+pycparser>=2.21
+cssselect2>=0.6.0
+html5lib>=1.1
+tinycss2>=1.1.0
+webencodings>=0.5.1
+
