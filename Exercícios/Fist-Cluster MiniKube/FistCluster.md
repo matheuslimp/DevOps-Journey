@@ -91,7 +91,7 @@ minikube kubectl -- get po -A
 ```
 
 
-7. Expondo a Dashboard do MiniKube na rede local (Port-forward) Não indicado para ambiente produtivos
+### 6. Expondo a Dashboard do MiniKube na rede local (Port-forward) Não indicado para ambiente produtivos
 
 ### Ative a dashboard:
 ```bash
