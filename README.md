@@ -60,7 +60,7 @@ Um roteiro de estudos em tecnologias voltadas para **DevOps** e automação.
 - 🟣 LXC
 
 ### Orquestradores de Containers
-- 🟣 Kubernetes
+- 🟣 [Kubernetes](https://kubernetes.io/pt-br/docs/concepts/)
   - 🟣 Rancher (orquestrador de clusters)
   - 🟣 OpenShift (Kubernetes + extras Red Hat)
     - 🟣 Operadores
