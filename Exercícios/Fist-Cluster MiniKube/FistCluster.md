@@ -1,5 +1,3 @@
-# Guia de Instalação e Configuração do MiniKube
-
 ## 🎯 Objetivo
 - Criar um Cluster **MiniKube** e implantar um app de *Hello World*.  
 - Instalar o **Kubectl**.  
