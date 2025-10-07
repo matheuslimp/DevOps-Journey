@@ -1,3 +1,5 @@
+# Guia de Instalação e Configuração do MiniKube
+
 ## 🎯 Objetivo
 - Criar um Cluster **MiniKube** e implantar um app de *Hello World*.  
 - Instalar o **Kubectl**.  
@@ -89,7 +91,7 @@ minikube kubectl -- get po -A
 ```
 
 
-## 6. Expondo a Dashboard do MiniKube na rede local (Port-forward) Não indicado para ambiente produtivos
+7. Expondo a Dashboard do MiniKube na rede local (Port-forward) Não indicado para ambiente produtivos
 
 ### Ative a dashboard:
 ```bash
