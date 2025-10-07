@@ -8,11 +8,11 @@ Um roteiro de estudos em tecnologias voltadas para **DevOps** e automação.
 - 🟡 **Proativo** – Conteúdo extra para quem quer ir além.  
 
 ---
-## [Exercícios](/Exercícios/Fist-Cluster%20MiniKube/)
+## [Exercícios](/Exercícios/)
 
-- 🟣  Criar um Cluster MiniKube e disponibilizar o acesso a Dashboard. 
-- 🟢  
-- 🟡
+- 🟣 1 - [Criar um Cluster MiniKube e implantar um app de Hello Word](./Exercícios/Fist-Cluster%20MiniKube/FistCluster.md)
+- 🟢 2 - Expor o acesso da Dashboard do MiniKube na rede local.
+
 
 ---
 
