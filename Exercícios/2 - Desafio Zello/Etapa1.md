@@ -1,13 +1,13 @@
-### Etapa 1:
+# Etapa 1:
 
-## Criar um contêiner com o banco de dados MongoDB;
+# Criar um contêiner com o banco de dados MongoDB;
 
 ```bash
 docker run -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=Senha@123 --name mongo-container mongo:7.0
 ```
-    Esse comando executa um container docker com a imagem MongoDB7.0 do dockerHub com redirecionamento da por 27017, e fornece as variaveis de Username e Password. 
+Esse comando executa um container docker com a imagem MongoDB7.0 do dockerHub com redirecionamento da por 27017, e fornece as variaveis de Username e Password. 
 
-## Criar um contêiner com a aplicação feita em NestJs disponivel em "fontes/frontend";
+# Criar um contêiner com a aplicação feita em NestJs disponivel em "fontes/frontend";
 
 DOCKERFILE:
 ```bash
@@ -77,4 +77,38 @@ docker run -d -p 3001:3001 --name frontend-zello img-front-zello
 
 
 
-## Criar um contêiner com a aplicação SpringBoot disponivel em "fontes/backend";
+# Criar um contêiner com a aplicação SpringBoot disponivel em "fontes/backend";
+* Como o projeto não estava compilado foi necessário realizar a instalação do maven e compilar o arquivo .jar e antes tive que atualizar alguns dependencia par aque sejam compativeis com a imagem, pois estavam desatualizadas como o lombok, "<version>1.18.32</version>"
+
+DOCKERFILE-Backend:
+```bash
+FROM eclipse-temurin:21-jre-alpine
+
+WORKDIR /app
+
+COPY target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+```
+
+
+### Build da imagem
+
+    docker build -t minha-app-backend .
+
+
+### Rodar o container
+
+    docker run -d -p 8080:8080 --name backend minha-app-backend
+
+
+### Ver logs em tempo real
+
+    docker logs -f backend
+
+
+### E acessar no navegador:
+
+    http://localhost:8080
