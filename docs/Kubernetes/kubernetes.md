@@ -1,7 +1,7 @@
 # 🏗 Arquitetura do Kubernetes e Manifests
 
 De forma resumida, o Kubernetes tem dois blocos principais:
-
+![Kubernets](./kubernetes-cluster-architecture.svg)
 ---
 
 ## 🔹 Plano de Controle (Control Plane)
@@ -48,6 +48,7 @@ spec:
         - name: api
           image: minha-api:1.0
 
+```
 
 2. API Server recebe o manifest
 
@@ -64,7 +65,8 @@ spec:
   Ex: Pod 1 no Node A, Pod 2 no Node B, Pod 3 no Node C.
 
 5. Kubelet do Node cria os containers usando o runtime (ex: containerd).
-6 . Kube-proxy cria as regras de rede para que o Service aponte para esses Pods.
+
+6. Kube-proxy cria as regras de rede para que o Service aponte para esses Pods.
 
 ## Relação entre componentes e manifests
 
