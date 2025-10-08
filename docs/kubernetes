@@ -1,1 +1,92 @@
+# 🏗 Arquitetura do Kubernetes e Manifests
 
+De forma resumida, o Kubernetes tem dois blocos principais:
+
+---
+
+## 🔹 Plano de Controle (Control Plane)
+
+É o “cérebro” do cluster. Componentes principais:
+
+- **API Server** → recebe todos os comandos (`kubectl`, manifests YAML).  
+- **Scheduler** → decide em qual nó (máquina) cada Pod vai rodar.  
+- **Controller Manager** → garante que o estado desejado (descrito nos manifests) seja mantido.  
+- **etcd** → banco chave-valor onde o Kubernetes guarda o estado do cluster.  
+
+---
+
+## 🔹 Plano de Dados (Nodes)
+
+São as “máquinas” (virtuais ou físicas) onde os containers rodam.  
+Cada nó tem:
+
+- **Kubelet** → agente que conversa com o Control Plane.  
+- **Kube-proxy** → cuida da rede e dos Services.  
+- **Container runtime** → quem realmente roda os containers (Docker, containerd, CRI-O).  
+
+---
+
+## 📜 Onde entram os manifests?
+
+Os manifests YAML são a forma de você descrever o estado desejado do cluster.  
+Quando você aplica um manifest (`kubectl apply -f arquivo.yaml`), o Kubernetes segue este fluxo:
+
+1. Você cria o manifest (Deployment, Service, etc.)  
+
+Exemplo:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minha-api
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: api
+          image: minha-api:1.0
+
+
+2. API Server recebe o manifest
+
+  Ele valida se o YAML está correto e registra no etcd.
+
+3. Controller Manager vê a diferença entre o estado desejado e o real
+
+  O manifest pede 3 Pods.
+  O cluster ainda tem 0 Pods.
+  O Controller cria 3 Pods.
+
+4. Scheduler decide onde rodar cada Pod
+
+  Ex: Pod 1 no Node A, Pod 2 no Node B, Pod 3 no Node C.
+
+5. Kubelet do Node cria os containers usando o runtime (ex: containerd).
+6 . Kube-proxy cria as regras de rede para que o Service aponte para esses Pods.
+
+## Relação entre componentes e manifests
+
+| Manifest (YAML) | O que representa | Quem no Kubernetes cuida disso |
+| :--- | :--- | :--- |
+| **Pod** | Unidade básica de execução de containers | Kubelet (no Node) |
+| **Deployment** | Controlador que garante réplicas e updates | Controller Manager + Scheduler |
+| **Service** | Rede estável para acessar Pods | kube-proxy |
+| **ConfigMap / Secret** | Configurações e segredos usados por containers | API Server / etcd |
+| **PersistentVolumeClaim (PVC)** | Solicitação de armazenamento persistente | Controller Manager + Storage backend |
+
+
+
+🚀 Caso real
+
+Você aplica 3 manifests:
+
+deployment-api.yaml → descreve 3 réplicas da sua aplicação.
+
+service-api.yaml → cria um Service que expõe essa aplicação.
+
+deployment-mongo.yaml + service-mongo.yaml → definem o banco e deixam acessível para a API.
+
+O Control Plane garante que tudo isso aconteça automaticamente.
+Você não “sobe containers” manualmente — você descreve o estado final e o Kubernetes mantém esse estado.
