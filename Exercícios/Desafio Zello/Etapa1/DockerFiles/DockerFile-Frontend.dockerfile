@@ -1,11 +1,6 @@
 # Primeiro escolho a imagem a ser utilizada
 FROM node:20
 
-# Metadados opcionais
-LABEL maintainer="matheuslimp@outlook.com"
-LABEL version="1.0"
-LABEL description="Nestj com frontend do projeto Zello"
-
 # Diretório de trabalho do container
 WORKDIR /app/frontend
 
