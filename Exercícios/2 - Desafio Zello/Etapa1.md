@@ -3,7 +3,20 @@
 # Criar um contêiner com o banco de dados MongoDB;
 
 ```bash
-docker run -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=usr_challenge -e MONGO_INITDB_ROOT_PASSWORD=123456 --name mongo-container mongo:7.0
+# Usa a imagem oficial do MongoDB
+FROM mongo:7.0
+
+# Define usuário e senha root
+ENV MONGO_INITDB_ROOT_USERNAME=usr_challenge
+ENV MONGO_INITDB_ROOT_PASSWORD=123456
+
+# Cria o banco "admin" automaticamente
+ENV MONGO_INITDB_DATABASE=admin
+
+# Copia script de inicialização (opcional, caso queira mais customização)
+# Arquivos em /docker-entrypoint-initdb.d/ são executados na primeira vez que o container roda
+COPY init.js /docker-entrypoint-initdb.d/
+
 ```
 Esse comando executa um container docker com a imagem MongoDB7.0 do dockerHub com redirecionamento da por 27017, e fornece as variaveis de Username e Password. 
 
