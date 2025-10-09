@@ -1,0 +1,36 @@
+services:
+  backend-zello:
+    image: img-backend-zello
+    container_name: backend-zello
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo-zello
+    restart: always
+
+  mongo-zello:
+    image: img-mongo-zello
+    container_name: db-zello
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=usr_challenge
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+      - MONGO_INITDB_DATABASE=admin
+    volumes:
+      - db_data:/data/db
+
+  front-zello:
+    image: img-frontend-zello
+    container_name: front-zello
+    ports:
+      - "3001:3001"
+    environment:
+      - URL_BACKEND=http://backend-zello:8080/
+    depends_on:
+      - mongo-zello
+    restart: always
+
+
+volumes:
+  db_data:
