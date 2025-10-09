@@ -3,7 +3,7 @@
 # Criar um contêiner com o banco de dados MongoDB;
 
 ```bash
-docker run -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=Senha@123 --name mongo-container mongo:7.0
+docker run -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=usr_challenge -e MONGO_INITDB_ROOT_PASSWORD=123456 --name mongo-container mongo:7.0
 ```
 Esse comando executa um container docker com a imagem MongoDB7.0 do dockerHub com redirecionamento da por 27017, e fornece as variaveis de Username e Password. 
 
