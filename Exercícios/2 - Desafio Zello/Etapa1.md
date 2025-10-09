@@ -18,6 +18,11 @@ ENV MONGO_INITDB_DATABASE=admin
 COPY init.js /docker-entrypoint-initdb.d/
 
 ```
+```bash
+docker run -d -p 27017:27017 --name mongo-container custom-mongo
+```
+
+
 Esse comando executa um container docker com a imagem MongoDB7.0 do dockerHub com redirecionamento da por 27017, e fornece as variaveis de Username e Password. 
 
 # Criar um contêiner com a aplicação feita em NestJs disponivel em "fontes/frontend";
