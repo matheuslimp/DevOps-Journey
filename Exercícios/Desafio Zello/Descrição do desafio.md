@@ -91,3 +91,59 @@ docker build  -f DockerFile-Backend.dockerfile -t img-backend-zello .
 ```bash
 docker compose up -d
 ```
+
+## Etapa 4:
+
+Colocar a aplicação para funcionar no Kubernetes, no namespace "challenge";
+
+Entregável: Os objetos yaml - deployment, service, volume, volumeclaim, ingress - e os comandos kubectl
+
+
+```yaml
+# deployment.yaml
+apiVersion: apps/v1       # Versão da API
+kind: Deployment          # Tipo de recurso
+metadata:
+  name: minha-aplicacao   # Nome do Deployment
+  namespace: challenge    # Namespace onde será criado
+  labels:
+    app: minha-aplicacao
+spec:
+  replicas: 3             # Número de Pods desejados
+  selector:
+    matchLabels:
+      app: minha-aplicacao
+  template:
+    metadata:
+      labels:
+        app: minha-aplicacao
+    spec:
+      containers:
+        - name: minha-aplicacao-container
+          image: minha-imagem:latest  # Imagem do contêiner
+          ports:
+            - containerPort: 80       # Porta exposta pelo contêiner
+          env:                        # Variáveis de ambiente (opcional)
+            - name: AMBIENTE
+              value: "producao"
+```
+
+Explicação dos principais campos:
+
+apiVersion: Versão da API do Kubernetes para o Deployment (apps/v1 é a mais usada atualmente).
+
+kind: Tipo de recurso (Deployment).
+
+metadata: Informações do Deployment, como nome, namespace e labels.
+
+spec: Especificações do Deployment.
+
+  replicas: Quantos Pods você quer executar.
+
+  selector: Define como o Deployment encontra os Pods gerenciados.
+
+  template: Modelo de Pod que será criado.
+
+  metadata: Labels do Pod.
+
+  spec: Especificações do Pod, incluindo contêineres, imagens, portas e variáveis de ambiente.

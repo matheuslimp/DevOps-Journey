@@ -1,0 +1,12 @@
+# O arquivo projeto já foi compatilado utilizando o maven agora que temos o .jar sendo assim não precisarei executar o Build e compilar em um container, vou apenas subir a maquina e executar
+
+FROM eclipse-temurin:21-jre-alpine
+
+WORKDIR /app
+
+COPY target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+

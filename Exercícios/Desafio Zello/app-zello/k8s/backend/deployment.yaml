@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend-zello
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-zello
+  template:
+    metadata:
+      labels:
+        app: backend-zello
+    spec:
+      containers:
+        - name: backend-zello
+          image: img-backend-zello
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: "mongodb://usr_challenge:123456@mongo-service:27017/admin"
