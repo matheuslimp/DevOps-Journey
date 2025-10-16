@@ -1,0 +1,29 @@
+---
+- name: Instalar e habilitar NGINX
+  hosts: webservers
+  become: true
+  gather_facts: true
+
+  vars:
+    # mapeamento simples por família de SO (ajuste se necessário)
+    nginx_pkg_map:
+      Debian: nginx
+      RedHat: nginx
+
+  tasks:
+    - name: Atualizar cache APT (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Instalar pacote nginx
+      package:
+        name: "{{ nginx_pkg_map[ansible_facts['os_family']] | default('nginx') }}"
+        state: present
+
+    - name: Garantir que o serviço nginx esteja habilitado e iniciado
+      service:
+        name: nginx
+        state: started
+        enabled: yes
